@@ -2,6 +2,7 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::process;
+use std::error::Error;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -14,17 +15,21 @@ fn main() {
     println!("Searching for {}", config.query);
     println!("in the file {}", config.filename);
 
-    run(config);
+    if let Err(e) = run(config) {
+        println!("Application error: {}", e);
+        process::exit(1);
+    }
 }
 
-fn run(config: Config){
-    let mut f = File::open(config.filename).expect("file not found");
+fn run(config: Config) -> Result<(), Box<Error>>{
+    let mut f = File::open(config.filename)?;
     let mut contents = String::new();
 
-    f.read_to_string(&mut contents)
-        .expect("Error during reading file");
+    f.read_to_string(&mut contents)?;
 
-    println!("in file text \n {:?}", contents);
+    println!("with file text \n {:?}", contents);
+
+    Ok(())
 }
 
 struct Config {
