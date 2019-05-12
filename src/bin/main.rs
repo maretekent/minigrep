@@ -14,8 +14,10 @@ fn main() {
     println!("Searching for {}", config.query);
     println!("in the file {}", config.filename);
 
-    // Read the file
+    run(config);
+}
 
+fn run(config: Config){
     let mut f = File::open(config.filename).expect("file not found");
     let mut contents = String::new();
 
