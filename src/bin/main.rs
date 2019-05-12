@@ -2,10 +2,10 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
-fn main(){
+fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let config = parse_config(&args);
+    let config = Config::new(&args);
 
     println!("Searching for {}", config.query);
     println!("in the file {}", config.filename);
@@ -13,22 +13,24 @@ fn main(){
     // Read the file
 
     let mut f = File::open(config.filename).expect("file not found");
-    let mut contents =  String::new();
+    let mut contents = String::new();
 
     f.read_to_string(&mut contents)
         .expect("Error during reading file");
-    
+
     println!("in file text \n {:?}", contents);
 }
 
 struct Config {
     query: String,
-    filename: String
+    filename: String,
 }
 
-fn parse_config(args: &[String]) -> Config{
-    let query = args[1].clone();
-    let filename = args[2].clone();
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let filename = args[2].clone();
 
-    Config { query, filename }
+        Config { query, filename }
+    }
 }
